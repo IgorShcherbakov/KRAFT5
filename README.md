@@ -21,7 +21,6 @@ mkdir -p ./secrets/ && \
 curl -o ./secrets/YandexInternalRootCA.crt "https://storage.yandexcloud.net/cloud-certs/CA.pem" && \
 chmod 0655 ./secrets/YandexInternalRootCA.crt
 ```
---5. Настройка Yandex Cloud CLI
 
 ## Задание 1.Развёртывание и настройка Kafka-кластера в Yandex Cloud
 
@@ -76,3 +75,25 @@ chmod 0655 ./secrets/YandexInternalRootCA.crt
 ![alt text](resources/consumer_terminal.png)
 
 ## Задание 2. Интеграция Kafka с внешними системами (Apache NiFi / Hadoop)
+
+### Шаг 1. Преобразовать сертификат в формат PKCS12:
+```bash
+keytool -importcert -alias YandexRootCA -file ./secrets/YandexInternalRootCA.crt -keystore truststore.p12 -storetype PKCS12
+```
+
+### Шаг 2. Поднять контейнер с Apache NiFi:
+```bash
+docker compose up -d
+```
+
+### Шаг 3. Перейти по адресу http://localhost:8080/nifi/:
+
+![alt text](resources/nifi_start.png)
+
+### Шаг 4. Сконфигурировать процессоры:
+
+![alt text](resources/processors.png)
+
+### Шаг 5. Проверить вывод консьюмера:
+
+![alt text](resources/nifi_messages.png)
